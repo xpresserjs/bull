@@ -1,0 +1,17 @@
+{
+  "name": "@xpresser/bull",
+  "version": "1.0.0",
+  "description": "Use Bull for xpresser's cron jobs and queues.",
+  "main": "index.js",
+  "repository": "https://github.com/xpresserjs/bull.git",
+  "author": "xpresserjs",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "xpresser": "^0.2.49"
+  },
+  "dependencies": {
+    "bull": "^3.18.0"
+  },
+  "keywords": ["xpresserjs", "bull"]
+}
