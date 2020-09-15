@@ -1,6 +1,6 @@
 {
   "name": "@xpresser/bull",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Use Bull for xpresser's cron jobs and queues.",
   "main": "index.js",
   "repository": "https://github.com/xpresserjs/bull.git",
