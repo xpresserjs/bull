@@ -31,26 +31,32 @@ module.exports = {
 
                         const bull = new Bull(cronFile);
                         await bull.empty();
-                        await bull.removeJobs()
+                        await bull.removeJobs();
 
                         bull.process(async (queue, done) => {
-                            queue.end = done ? done : () => {
-                            };
+                            queue.end = done ? done : r => r;
                             return job.handler([], queue, done)
                         });
 
-                        if (config.get('logCompletedTime') === true) {
-                            bull.on('completed', (job) => {
-                                const jobsPath = $.path.backend('jobs/');
-                                const jobName = job.queue.name.replace(jobsPath, '');
-                                console.log(`Cron: {${jobName}} ran at (${new Date().toUTCString()})`)
-                            });
-                        }
+                        bull.on('completed', (job) => {
+                            const jobsPath = $.path.backend('jobs/');
+                            const jobName = job.queue.name.replace(jobsPath, '');
+
+                            if (config.get('logCompletedTime') === true) {
+                                console.log(`Cron: {${jobName}} ran at (${new Date().toUTCString()})`);
+                            }
+
+                            $.engineData.path('bull').set('last_completed_queue', {
+                                name: jobName,
+                                data: job.data,
+                                date: new Date()
+                            })
+                        });
 
                         bull.add({}, {repeat: {cron: cron.schedule}});
                     }
 
-                    $.logInfo(`Added (${cronDotJs.length}) Jobs to cron..`)
+                    $.logInfo(`Added (${cronDotJs.length}) Jobs to cron..`);
                 }
 
             });
