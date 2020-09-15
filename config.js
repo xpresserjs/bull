@@ -4,6 +4,7 @@
 const PluginConfig = $.objectCollection({
     enabled: true,
     handleCron: false,
+    logCompletedTime: true,
 });
 
 // Merge with user defined configuration

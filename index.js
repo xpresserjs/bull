@@ -32,11 +32,21 @@ module.exports = {
                         const bull = new Bull(cronFile);
                         await bull.empty();
                         await bull.removeJobs()
+
                         bull.process(async (queue, done) => {
-                            queue['end'] = done ? done : () => {
+                            queue.end = done ? done : () => {
                             };
                             return job.handler([], queue, done)
                         });
+
+                        if (config.get('logCompletedTime') === true) {
+                            bull.on('completed', (job) => {
+                                const jobsPath = $.path.backend('jobs/');
+                                const jobName = job.queue.name.replace(jobsPath, '');
+                                console.log(`Cron: {${jobName}} ran at (${new Date().toUTCString()})`)
+                            });
+                        }
+
                         bull.add({}, {repeat: {cron: cron.schedule}});
                     }
 
